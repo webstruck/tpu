@@ -64,7 +64,7 @@ FLAGS = flags.FLAGS
 
 def _load_config(model_dir):
   tf.logging.info("model_dir = " + model_dir)
-  with tf.gfile.GFile(os.path.join(model_dir, "config.json")) as f:
+  with open(os.path.join(model_dir, "config.json"), "r") as f:
     cfg = json.load(f)
     cfg = utils.to_config(cfg)
   return cfg
@@ -75,8 +75,8 @@ def train_and_eval(cfg, do_eval=True, report_fn=None):
   tf.logging.info("cfg.model_dir = " + cfg.model_dir)
   # Save out config to model directory
   assert FLAGS.mode == "train"
-  tf.gfile.MakeDirs(cfg.model_dir)
-  with tf.gfile.GFile(os.path.join(cfg.model_dir, "config.json"), "w") as f:
+  os.mkdir(cfg.model_dir)
+  with open(os.path.join(cfg.model_dir, "config.json"), "w") as f:
     json.dump(cfg, f)
 
   if not cfg.dataset.num_repeats and not cfg.steps_per_epoch:
